@@ -35,16 +35,24 @@ function createStore(reducer) {
 }
 
 /** App Code - User defines such functions */
+
+const ADD_TODO = 'ADD_TODO'
+const REMOVE_TODO = 'REMOVE_TODO'
+const TOGGLE_TODO = 'TOGGLE_TODO'
+const ADD_GOAL = 'ADD_GOAL'
+const REMOVE_GOAL = 'REMOVE_GOAL'
+const TOGGLE_GOAL = 'TOGGLE_GOAL'
+
 // Reducer function - Reduces input state and reduces it to new state
 // Must be a pure function
 // Must return new state rather than mutated state
 function todos(state = [], action) {
   switch (action.type) {
-    case 'ADD_TODO':
+    case ADD_TODO:
       return state.concat([action.todo])
-    case 'REMOVE_TODO':
+    case REMOVE_TODO:
       return state.filter(todo => todo.id !== action.id)
-    case 'TOGGLE_TODO':
+    case TOGGLE_TODO:
       return state.map(
         todo =>
           todo.id !== action.id
@@ -58,11 +66,11 @@ function todos(state = [], action) {
 
 function goals(state = [], action) {
   switch (action.type) {
-    case 'ADD_GOAL':
+    case ADD_GOAL:
       return state.concat([action.goal])
-    case 'REMOVE_GOAL':
+    case REMOVE_GOAL:
       return state.filter(goal => goal.id !== action.id)
-    case 'TOGGLE_GOAL':
+    case TOGGLE_GOAL:
       return state.map(
         goal =>
           goal.id !== action.id
@@ -91,7 +99,7 @@ store.subscribe(() => {
 
 // Dispatch action - todos
 store.dispatch({
-  type: 'ADD_TODO',
+  type: ADD_TODO,
   todo: {
     id: 0,
     name: 'Read book',
@@ -100,7 +108,7 @@ store.dispatch({
 })
 
 store.dispatch({
-  type: 'ADD_TODO',
+  type: ADD_TODO,
   todo: {
     id: 1,
     name: 'Read book 2',
@@ -110,18 +118,18 @@ store.dispatch({
 
 // Dispatch new actions - todos
 store.dispatch({
-  type: 'REMOVE_TODO',
+  type: REMOVE_TODO,
   id: 0
 })
 
 store.dispatch({
-  type: 'TOGGLE_TODO',
+  type: TOGGLE_TODO,
   id: 1
 })
 
 // Dispatch action - goals
 store.dispatch({
-  type: 'ADD_GOAL',
+  type: ADD_GOAL,
   goal: {
     id: 0,
     name: 'WAlk',
@@ -130,7 +138,7 @@ store.dispatch({
 })
 
 store.dispatch({
-  type: 'ADD_GOAL',
+  type: ADD_GOAL,
   goal: {
     id: 1,
     name: 'Go to gym',
@@ -140,11 +148,11 @@ store.dispatch({
 
 // Dispatch new actions - goals
 store.dispatch({
-  type: 'REMOVE_GOAL',
+  type: REMOVE_GOAL,
   id: 1
 })
 
 store.dispatch({
-  type: 'TOGGLE_GOAL',
+  type: TOGGLE_GOAL,
   id: 0
 })
