@@ -56,6 +56,24 @@ function todos(state = [], action) {
   }
 }
 
+function goals(state = [], action) {
+  switch (action.type) {
+    case 'ADD_GOAL':
+      return state.concat([action.goal])
+    case 'REMOVE_GOAL':
+      return state.filter(goal => goal.id !== action.id)
+    case 'TOGGLE_GOAL':
+      return state.map(
+        goal =>
+          goal.id !== action.id
+            ? goal
+            : Object.assign({}, goal, { complete: !goal.complete })
+      )
+    default:
+      return state
+  }
+}
+
 // Here todos is the user defined reducer function
 const store = createStore(todos)
 
