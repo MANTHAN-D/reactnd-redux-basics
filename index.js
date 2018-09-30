@@ -74,15 +74,22 @@ function goals(state = [], action) {
   }
 }
 
+function app(state = {}, action) {
+  return {
+    todos: todos(state.todos, action),
+    goals: goals(state.goals, action)
+  }
+}
+
 // Here todos is the user defined reducer function
-const store = createStore(todos)
+const store = createStore(app)
 
 // Register listener
 store.subscribe(() => {
   console.log('The new state is: ', store.getState())
 })
 
-// Dispatch action
+// Dispatch action - todos
 store.dispatch({
   type: 'ADD_TODO',
   todo: {
@@ -101,7 +108,7 @@ store.dispatch({
   }
 })
 
-// Dispatch new actions
+// Dispatch new actions - todos
 store.dispatch({
   type: 'REMOVE_TODO',
   id: 0
@@ -110,4 +117,34 @@ store.dispatch({
 store.dispatch({
   type: 'TOGGLE_TODO',
   id: 1
+})
+
+// Dispatch action - goals
+store.dispatch({
+  type: 'ADD_GOAL',
+  goal: {
+    id: 0,
+    name: 'WAlk',
+    complete: false
+  }
+})
+
+store.dispatch({
+  type: 'ADD_GOAL',
+  goal: {
+    id: 1,
+    name: 'Go to gym',
+    complete: true
+  }
+})
+
+// Dispatch new actions - goals
+store.dispatch({
+  type: 'REMOVE_GOAL',
+  id: 1
+})
+
+store.dispatch({
+  type: 'TOGGLE_GOAL',
+  id: 0
 })
