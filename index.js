@@ -39,17 +39,18 @@ function createStore(reducer) {
 // Must be a pure function
 // Must return new state rather than mutated state
 function todos(state = [], action) {
-  if (action.type === 'ADD_TODO') {
-    return state.concat([action.todo])
-  } else if (action.type === 'REMOVE_TODO') {
-    return state.filter(todo => todo.id !== action.id)
-  } else if (action.type === 'TOGGLE_TODO') {
-    return state.map(
-      todo =>
-        todo.id !== action.id
-          ? todo
-          : Object.assign({}, todo, { complete: !todo.complete })
-    )
+  switch (action.type) {
+    case 'ADD_TODO':
+      return state.concat([action.todo])
+    case 'REMOVE_TODO':
+      return state.filter(todo => todo.id !== action.id)
+    case 'TOGGLE_TODO':
+      return state.map(
+        todo =>
+          todo.id !== action.id
+            ? todo
+            : Object.assign({}, todo, { complete: !todo.complete })
+      )
   }
   return state
 }
