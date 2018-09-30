@@ -68,7 +68,8 @@ store.dispatch({
   type: 'ADD_TODO',
   todo: {
     id: 0,
-    name: 'Read book'
+    name: 'Read book',
+    complete: false
   }
 })
 
@@ -76,6 +77,18 @@ store.dispatch({
   type: 'ADD_TODO',
   todo: {
     id: 1,
-    name: 'Read book'
+    name: 'Read book 2',
+    complete: true
   }
+})
+
+// Dispatch new actions
+store.dispatch({
+  type: 'REMOVE_TODO',
+  id: 0
+})
+
+store.dispatch({
+  type: 'TOGGLE_TODO',
+  id: 1
 })
