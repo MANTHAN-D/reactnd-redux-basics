@@ -51,8 +51,9 @@ function todos(state = [], action) {
             ? todo
             : Object.assign({}, todo, { complete: !todo.complete })
       )
+    default:
+      return state
   }
-  return state
 }
 
 // Here todos is the user defined reducer function
