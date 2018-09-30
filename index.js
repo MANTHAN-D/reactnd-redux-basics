@@ -89,6 +89,50 @@ function app(state = {}, action) {
   }
 }
 
+// Action Creators
+
+function addTodoAction(todo) {
+  return {
+    type: ADD_TODO,
+    todo
+  }
+}
+
+function removeTodoAction(id) {
+  return {
+    type: REMOVE_TODO,
+    id
+  }
+}
+
+function toggleTodoAction(id) {
+  return {
+    type: TOGGLE_TODO,
+    id
+  }
+}
+
+function addGoalAction(goal) {
+  return {
+    type: ADD_GOAL,
+    goal
+  }
+}
+
+function removeGoalAction(id) {
+  return {
+    type: REMOVE_GOAL,
+    id
+  }
+}
+
+function toggleGoalAction(id) {
+  return {
+    type: TOGGLE_GOAL,
+    id
+  }
+}
+
 // Here todos is the user defined reducer function
 const store = createStore(app)
 
@@ -98,61 +142,46 @@ store.subscribe(() => {
 })
 
 // Dispatch action - todos
-store.dispatch({
-  type: ADD_TODO,
-  todo: {
+store.dispatch(
+  addTodoAction({
     id: 0,
     name: 'Read book',
     complete: false
-  }
-})
+  })
+)
 
-store.dispatch({
-  type: ADD_TODO,
-  todo: {
+store.dispatch(
+  addTodoAction({
     id: 1,
     name: 'Read book 2',
     complete: true
-  }
-})
+  })
+)
 
 // Dispatch new actions - todos
-store.dispatch({
-  type: REMOVE_TODO,
-  id: 0
-})
+store.dispatch(removeTodoAction(0))
 
-store.dispatch({
-  type: TOGGLE_TODO,
-  id: 1
-})
+store.dispatch(toggleTodoAction(1))
 
 // Dispatch action - goals
-store.dispatch({
-  type: ADD_GOAL,
-  goal: {
+
+store.dispatch(
+  addGoalAction({
     id: 0,
     name: 'WAlk',
     complete: false
-  }
-})
+  })
+)
 
-store.dispatch({
-  type: ADD_GOAL,
-  goal: {
+store.dispatch(
+  addGoalAction({
     id: 1,
     name: 'Go to gym',
     complete: true
-  }
-})
+  })
+)
 
 // Dispatch new actions - goals
-store.dispatch({
-  type: REMOVE_GOAL,
-  id: 1
-})
+store.dispatch(removeGoalAction(1))
 
-store.dispatch({
-  type: TOGGLE_GOAL,
-  id: 0
-})
+store.dispatch(toggleGoalAction(0))
