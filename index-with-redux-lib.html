@@ -129,7 +129,7 @@
                 return alert('That\'s a bad idea')
             }
 
-            return store.checkAndDispatch(store, action)
+            return store.dispatch(action)
         }
 
         // Here app is the user defined reducer function
@@ -152,7 +152,7 @@
         // DOM Code
         function addTodo() {
             const name = document.getElementById('todo').value
-            store.checkAndDispatch(store, addTodoAction({
+            checkAndDispatch (store, addTodoAction({
                 id: generateId(),
                 complete: false,
                 name,
@@ -162,7 +162,7 @@
 
         function addGoal() {
             const name = document.getElementById('goal').value
-            store.checkAndDispatch(store, addGoalAction({
+            checkAndDispatch (store, addGoalAction({
                 id: generateId(),
                 complete: false,
                 name,
@@ -185,14 +185,14 @@
             const textNode = document.createTextNode(todo.name)
 
             const removeBtn = createRemoveBtn(() => {
-                store.checkAndDispatch(store, removeTodoAction(todo.id))
+                checkAndDispatch (store, removeTodoAction(todo.id))
             })
 
             node.appendChild(textNode)
             node.appendChild(removeBtn)
             node.style.textDecoration = todo.complete ? 'line-through' : ''
             node.addEventListener('click', () => {
-                store.checkAndDispatch(store, toggleTodoAction(todo.id))
+                checkAndDispatch (store, toggleTodoAction(todo.id))
             })
 
             document.getElementById('todos').appendChild(node)
@@ -203,14 +203,14 @@
             const textNode = document.createTextNode(goal.name)
 
             const removeBtn = createRemoveBtn(() => {
-                store.checkAndDispatch(store, removeGoalAction(goal.id))
+                checkAndDispatch (store, removeGoalAction(goal.id))
             })
 
             node.appendChild(textNode)
             node.appendChild(removeBtn)
             node.style.textDecoration = goal.complete ? 'line-through' : ''
             node.addEventListener('click', () => {
-                store.checkAndDispatch(store, toggleGoalAction(goal.id))
+                checkAndDispatch (store, toggleGoalAction(goal.id))
             })
 
             document.getElementById('goals').appendChild(node)
