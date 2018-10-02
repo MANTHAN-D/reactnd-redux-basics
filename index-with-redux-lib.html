@@ -119,6 +119,19 @@
             }
         }
 
+        function checkAndDispatch(store, action) {
+            if (action.type === ADD_TODO &&
+                action.todo.name.toLowerCase().includes('bitcoin')) {
+                return alert('That\'s a bad idea')
+            }
+            if (action.type === ADD_GOAL &&
+                action.goal.name.toLowerCase().includes('bitcoin')) {
+                return alert('That\'s a bad idea')
+            }
+
+            return store.checkAndDispatch(store, action)
+        }
+
         // Here app is the user defined reducer function
         const store = Redux.createStore(Redux.combineReducers({
             todos,
@@ -139,7 +152,7 @@
         // DOM Code
         function addTodo() {
             const name = document.getElementById('todo').value
-            store.dispatch(addTodoAction({
+            store.checkAndDispatch(store, addTodoAction({
                 id: generateId(),
                 complete: false,
                 name,
@@ -149,7 +162,7 @@
 
         function addGoal() {
             const name = document.getElementById('goal').value
-            store.dispatch(addGoalAction({
+            store.checkAndDispatch(store, addGoalAction({
                 id: generateId(),
                 complete: false,
                 name,
@@ -172,14 +185,14 @@
             const textNode = document.createTextNode(todo.name)
 
             const removeBtn = createRemoveBtn(() => {
-                store.dispatch(removeTodoAction(todo.id))
+                store.checkAndDispatch(store, removeTodoAction(todo.id))
             })
 
             node.appendChild(textNode)
             node.appendChild(removeBtn)
             node.style.textDecoration = todo.complete ? 'line-through' : ''
             node.addEventListener('click', () => {
-                store.dispatch(toggleTodoAction(todo.id))
+                store.checkAndDispatch(store, toggleTodoAction(todo.id))
             })
 
             document.getElementById('todos').appendChild(node)
@@ -190,14 +203,14 @@
             const textNode = document.createTextNode(goal.name)
 
             const removeBtn = createRemoveBtn(() => {
-                store.dispatch(removeGoalAction(goal.id))
+                store.checkAndDispatch(store, removeGoalAction(goal.id))
             })
 
             node.appendChild(textNode)
             node.appendChild(removeBtn)
             node.style.textDecoration = goal.complete ? 'line-through' : ''
             node.addEventListener('click', () => {
-                store.dispatch(toggleGoalAction(goal.id))
+                store.checkAndDispatch(store, toggleGoalAction(goal.id))
             })
 
             document.getElementById('goals').appendChild(node)
