@@ -4,22 +4,30 @@
 <head>
     <title>Todos and Goals</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.min.js"></script>
+    <script src="https://unpkg.com/react@16.3.0-alpha.1/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16.3.0-alpha.1/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
 </head>
 
 <body>
+    <h1>Vanila Javascript using Redux Lib</h1>
     <div>
-        <h1>Todo List</h1>
+        <h2>Todo List</h2>
         <input type="text" id="todo" placeholder="Add Todo" />
         <button id="todoBtn">Add Todo</button>
         <ui id="todos"></ui>
     </div>
 
     <div>
-        <h1>Goals</h1>
+        <h2>Goals</h2>
         <input type="text" id="goal" placeholder="Add Goal" />
         <button id="goalBtn">Add Goal</button>
         <ui id="goals"></ui>
     </div>
+
+    <hr/>
+
+    <div id="app"></div>
 
     <script type="text/javascript">
 
@@ -134,9 +142,9 @@
 
         const logger = (store) => (next) => (action) => {
             console.group(action.type)
-                console.log('The action is: ', action)
-                const result = next(action)
-                console.log('The new state is: ', store.getState())
+            console.log('The action is: ', action)
+            const result = next(action)
+            console.log('The new state is: ', store.getState())
             console.groupEnd()
             return result
         }
@@ -224,6 +232,117 @@
 
             document.getElementById('goals').appendChild(node)
         }
+    </script>
+
+    <script type="text/babel">
+
+        const List = (props) => {
+            return (
+                <ul>
+                { props.items && 
+                    props.items.map(item => (
+                        <li key={item.id} 
+                            style={{textDecoration: item.complete ? 'line-through' : ''}}
+                            onClick={() => props.onToggle(item)}>{item.name}
+                            <button onClick={() => props.onRemove(item)}>X</button>
+                        </li>
+                    ))
+                }
+                </ul>
+            )
+        }
+
+        class Todos extends React.Component {
+
+            addTodo = (event) => {
+                event.preventDefault();
+                const name = this.input.value
+                this.input.value = ''
+
+                this.props.store.dispatch(addTodoAction({
+                    id: generateId(),
+                    complete: false,
+                    name,
+                }))
+            }
+
+            toggleTodo = (todo) => {
+                this.props.store.dispatch(toggleTodoAction(todo.id))
+            }
+
+            removeTodo = (todo) => {
+                this.props.store.dispatch(removeTodoAction(todo.id))
+            }
+
+            render() {
+                return (
+                    <div>
+                        <h2>Todo List</h2>
+                        <input type="text" name="todo" placeholder="Add Todo" ref={input => this.input = input}/>
+                        <button onClick={this.addTodo}>Add Todo</button>
+                        <List items={this.props.todos} onToggle={this.toggleTodo}
+                            onRemove={this.removeTodo}/>
+                    </div>
+                )
+            }
+        }
+
+        class Goals extends React.Component {
+            addGoal = (event) => {
+                event.preventDefault();
+                const name = this.input.value
+                this.input.value = ''
+
+                this.props.store.dispatch(addGoalAction({
+                    id: generateId(),
+                    complete: false,
+                    name,
+                }))
+            }
+
+            toggleGoal = (goal) => {
+                this.props.store.dispatch(toggleGoalAction(goal.id))
+            }
+
+            removeGoal = (goal) => {
+                this.props.store.dispatch(removeGoalAction(goal.id))
+            }
+
+            render() {
+                return (
+                    <div>
+                        <h2>Goals</h2>
+                        <input type="text" name="goal" placeholder="Add Goal" ref={input => this.input = input}/>
+                        <button onClick={this.addGoal}>Add Goal</button>
+                        <List items={this.props.goals} onToggle={this.toggleGoal}
+                            onRemove={this.removeGoal}/>
+                    </div>
+                )
+            }
+        }
+
+        class App extends React.Component {
+
+            componentDidMount = () => {
+                const { store } = this.props
+
+                store.subscribe(() => this.forceUpdate())
+            }
+
+            render() {
+                const { store } = this.props
+                const {todos, goals} = store.getState()
+                return (
+                    <div>
+                        <h1>React App using Redux Lib</h1>
+                        <Todos todos={todos} store={this.props.store}/>
+                        <Goals goals={goals} store={this.props.store}/>
+                    </div>
+                )
+            }
+        }
+
+        ReactDOM.render(<App store={store}/>, document.getElementById('app'))
     </script>
 </body>
 

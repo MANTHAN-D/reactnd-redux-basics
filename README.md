@@ -1,6 +1,6 @@
-# Redux - Understanding Fundamentals
+# Redux with React - Understanding Fundamentals of using Redux with React as UI
 
-This is a simple implementation of redux store functionalities to understand behind the scene workings of Redux. It has minimal UI.
+This is a simple implementation of integrating redux library with React library for UI. It has minimal UI.
 
 ## Project Setup
 
