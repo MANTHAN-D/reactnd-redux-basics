@@ -7,6 +7,7 @@
     <script src="https://unpkg.com/react@16.3.0-alpha.1/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@16.3.0-alpha.1/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <script src="https://tylermcginnis.com/goals-todos-api/index.js"></script>
 </head>
 
 <body>
@@ -26,6 +27,7 @@
         const ADD_GOAL = 'ADD_GOAL'
         const REMOVE_GOAL = 'REMOVE_GOAL'
         const TOGGLE_GOAL = 'TOGGLE_GOAL'
+        const RECIEVE_DATA = 'RECIEVE_DATA'
 
         // Reducer function - Reduces input state and reduces it to new state
         // Must be a pure function
@@ -43,6 +45,8 @@
                                 ? todo
                                 : Object.assign({}, todo, { complete: !todo.complete })
                     )
+                case RECIEVE_DATA: action
+                    return action.todos
                 default:
                     return state
             }
@@ -61,6 +65,8 @@
                                 ? goal
                                 : Object.assign({}, goal, { complete: !goal.complete })
                     )
+                case RECIEVE_DATA:
+                    return action.goals
                 default:
                     return state
             }
@@ -107,6 +113,14 @@
             return {
                 type: TOGGLE_GOAL,
                 id
+            }
+        }
+
+        function recieveDataAction(todos, goals) {
+            return {
+                type: RECIEVE_DATA,
+                todos,
+                goals
             }
         }
 
@@ -232,6 +246,14 @@
                 const { store } = this.props
 
                 store.subscribe(() => this.forceUpdate())
+
+                // Fetch and log all todos and goals
+                Promise.all([
+                    API.fetchTodos(),
+                    API.fetchGoals(),
+                ]).then(([todos, goals]) => {
+                    store.dispatch(recieveDataAction(todos, goals))
+                })
             }
 
             render() {
