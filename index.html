@@ -8,6 +8,39 @@
     <script src="https://unpkg.com/react-dom@16.3.0-alpha.1/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
     <script src="https://tylermcginnis.com/goals-todos-api/index.js"></script>
+
+    <style>
+        .loader {
+            margin: 20px 20px;
+            border: 10px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 10px solid #3498db;
+            width: 50px;
+            height: 50px;
+            -webkit-animation: spin 5s linear infinite;
+            /* Safari */
+            animation: spin 0.9s linear infinite;
+        }
+
+        /* Safari */
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -67,6 +100,15 @@
                     )
                 case RECIEVE_DATA:
                     return action.goals
+                default:
+                    return state
+            }
+        }
+
+        function loading(state = true, action) {
+            switch (action.type) {
+                case RECIEVE_DATA:
+                    return false
                 default:
                     return state
             }
@@ -149,7 +191,8 @@
         // Here app is the user defined reducer function
         const store = Redux.createStore(Redux.combineReducers({
             todos,
-            goals
+            goals,
+            loading
         }), Redux.applyMiddleware(checker, logger))
     </script>
 
@@ -157,17 +200,21 @@
 
         const List = (props) => {
             return (
-                <ul>
-                { props.items && 
-                    props.items.map(item => (
-                        <li key={item.id} 
-                            style={{textDecoration: item.complete ? 'line-through' : ''}}
-                            onClick={() => props.onToggle(item)}>{item.name}
-                            <button onClick={() => props.onRemove(item)}>X</button>
-                        </li>
-                    ))
-                }
-                </ul>
+                props.isLoading ? (
+                    <div className="loader"></div>
+                ) : (
+                    <ul>
+                    { props.items && 
+                        props.items.map(item => (
+                            <li key={item.id} 
+                                style={{textDecoration: item.complete ? 'line-through' : ''}}
+                                onClick={() => props.onToggle(item)}>{item.name}
+                                <button onClick={() => props.onRemove(item)}>X</button>
+                            </li>
+                        ))
+                    }
+                    </ul>
+                )
             )
         }
 
@@ -194,13 +241,14 @@
             }
 
             render() {
+                const { loading } = this.props.store.getState()
                 return (
                     <div>
                         <h2>Todo List</h2>
                         <input type="text" name="todo" placeholder="Add Todo" ref={input => this.input = input}/>
                         <button onClick={this.addTodo}>Add Todo</button>
                         <List items={this.props.todos} onToggle={this.toggleTodo}
-                            onRemove={this.removeTodo}/>
+                            onRemove={this.removeTodo} isLoading={loading}/>
                     </div>
                 )
             }
@@ -228,13 +276,15 @@
             }
 
             render() {
+                const { loading } = this.props.store.getState()
                 return (
                     <div>
                         <h2>Goals</h2>
                         <input type="text" name="goal" placeholder="Add Goal" ref={input => this.input = input}/>
                         <button onClick={this.addGoal}>Add Goal</button>
                         <List items={this.props.goals} onToggle={this.toggleGoal}
-                            onRemove={this.removeGoal}/>
+                            onRemove={this.removeGoal} isLoading={loading}/>
+                        
                     </div>
                 )
             }
