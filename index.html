@@ -233,10 +233,18 @@
             }
 
             toggleTodo = (todo) => {
+                API.saveTodoToggle(todo.id).catch(() => {
+                    this.props.store.dispatch(toggleTodoAction(todo.id))
+                    alert('Aww Snap! Something went wrong!')
+                })
                 this.props.store.dispatch(toggleTodoAction(todo.id))
             }
 
             removeTodo = (todo) => {
+                API.deleteTodo(todo.id).catch(() => {
+                    this.props.store.dispatch(addTodoAction(todo))
+                    alert('Aww Snap! Something went wrong!')
+                })
                 this.props.store.dispatch(removeTodoAction(todo.id))
             }
 
@@ -272,6 +280,10 @@
             }
 
             removeGoal = (goal) => {
+                API.deleteGoal(goal.id).catch(() => {
+                    this.props.store.dispatch(addGoalAction(goal))
+                    alert('Aww Snap! Something went wrong!')
+                })
                 this.props.store.dispatch(removeGoalAction(goal.id))
             }
 
