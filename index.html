@@ -61,6 +61,7 @@
         const REMOVE_GOAL = 'REMOVE_GOAL'
         const TOGGLE_GOAL = 'TOGGLE_GOAL'
         const RECIEVE_DATA = 'RECIEVE_DATA'
+        const API_ERROR = 'Aww Snap! Something went wrong! Try again.'
 
         // Reducer function - Reduces input state and reduces it to new state
         // Must be a pure function
@@ -222,20 +223,18 @@
 
             addTodo = (event) => {
                 event.preventDefault();
-                const name = this.input.value
-                this.input.value = ''
-
-                this.props.store.dispatch(addTodoAction({
-                    id: generateId(),
-                    complete: false,
-                    name,
-                }))
+                API.saveTodo(this.input.value).then((todo) => {
+                    this.props.store.dispatch(addTodoAction(todo))
+                    this.input.value = ''
+                }).catch(() => {
+                    alert(API_ERROR)
+                })
             }
 
             toggleTodo = (todo) => {
                 API.saveTodoToggle(todo.id).catch(() => {
                     this.props.store.dispatch(toggleTodoAction(todo.id))
-                    alert('Aww Snap! Something went wrong!')
+                    alert(API_ERROR)
                 })
                 this.props.store.dispatch(toggleTodoAction(todo.id))
             }
@@ -243,7 +242,7 @@
             removeTodo = (todo) => {
                 API.deleteTodo(todo.id).catch(() => {
                     this.props.store.dispatch(addTodoAction(todo))
-                    alert('Aww Snap! Something went wrong!')
+                    alert(API_ERROR)
                 })
                 this.props.store.dispatch(removeTodoAction(todo.id))
             }
@@ -265,14 +264,13 @@
         class Goals extends React.Component {
             addGoal = (event) => {
                 event.preventDefault();
-                const name = this.input.value
-                this.input.value = ''
 
-                this.props.store.dispatch(addGoalAction({
-                    id: generateId(),
-                    complete: false,
-                    name,
-                }))
+                API.saveGoal(this.input.value).then((goal) => {
+                    this.props.store.dispatch(addGoalAction(goal))
+                    this.input.value = ''
+                }).catch(() => {
+                    alert(API_ERROR)
+                })
             }
 
             toggleGoal = (goal) => {
@@ -282,7 +280,7 @@
             removeGoal = (goal) => {
                 API.deleteGoal(goal.id).catch(() => {
                     this.props.store.dispatch(addGoalAction(goal))
-                    alert('Aww Snap! Something went wrong!')
+                    alert(API_ERROR)
                 })
                 this.props.store.dispatch(removeGoalAction(goal.id))
             }
