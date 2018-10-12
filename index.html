@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/react-dom@16.3.0-alpha.1/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
     <script src="https://tylermcginnis.com/goals-todos-api/index.js"></script>
+    <script src="https://unpkg.com/redux-thunk@2.2.0/dist/redux-thunk.min.js"></script>
 
     <style>
         .loader {
@@ -167,6 +168,19 @@
             }
         }
 
+        // Async Action Creators
+
+        function handleDeleteTodo(todo) {
+            return (dispatch) => {
+                API.deleteTodo(todo.id).catch(() => {
+                    dispatch(addTodoAction(todo))
+                    alert(API_ERROR)
+                })
+                dispatch(removeTodoAction(todo.id))
+            }
+        }
+
+        // Middlewares
         const checker = (store) => (next) => (action) => {
             if (action.type === ADD_TODO &&
                 action.todo.name.toLowerCase().includes('bitcoin')) {
@@ -189,12 +203,19 @@
             return result
         }
 
+        const thunk = (store) => (next) => (action) => {
+            if (typeof action === 'function') {
+                return action(store.dispatch)
+            }
+            return next(action)
+        }
+
         // Here app is the user defined reducer function
         const store = Redux.createStore(Redux.combineReducers({
             todos,
             goals,
             loading
-        }), Redux.applyMiddleware(checker, logger))
+        }), Redux.applyMiddleware(thunk, checker, logger))
     </script>
 
     <script type="text/babel">
@@ -240,11 +261,7 @@
             }
 
             removeTodo = (todo) => {
-                API.deleteTodo(todo.id).catch(() => {
-                    this.props.store.dispatch(addTodoAction(todo))
-                    alert(API_ERROR)
-                })
-                this.props.store.dispatch(removeTodoAction(todo.id))
+                this.props.store.dispatch(handleDeleteTodo(todo))
             }
 
             render() {
