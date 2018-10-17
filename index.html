@@ -314,13 +314,13 @@
             }
 
             render() {
-                const { loading } = this.props.store.getState()
+                const { todos, loading } = this.props.store.getState()
                 return (
                     <div>
                         <h2>Todo List</h2>
                         <input type="text" name="todo" placeholder="Add Todo" ref={input => this.input = input}/>
                         <button onClick={this.addTodo}>Add Todo</button>
-                        <List items={this.props.todos} onToggle={this.toggleTodo}
+                        <List items={todos} onToggle={this.toggleTodo}
                             onRemove={this.removeTodo} isLoading={loading}/>
                     </div>
                 )
@@ -344,13 +344,13 @@
             }
 
             render() {
-                const { loading } = this.props.store.getState()
+                const { goals, loading } = this.props.store.getState()
                 return (
                     <div>
                         <h2>Goals</h2>
                         <input type="text" name="goal" placeholder="Add Goal" ref={input => this.input = input}/>
                         <button onClick={this.addGoal}>Add Goal</button>
-                        <List items={this.props.goals} onToggle={this.toggleGoal}
+                        <List items={goals} onToggle={this.toggleGoal}
                             onRemove={this.removeGoal} isLoading={loading}/>
                         
                     </div>
@@ -370,14 +370,36 @@
             }
 
             render() {
-                const { store } = this.props
-                const {todos, goals} = store.getState()
                 return (
                     <div>
                         <h1>React App using Redux Lib</h1>
-                        <Todos todos={todos} store={this.props.store}/>
-                        <Goals goals={goals} store={this.props.store}/>
+                        <ConnectedTodos />
+                        <ConnectedGoals />
                     </div>
+                )
+            }
+        }
+
+        class ConnectedTodos extends React.Component {
+            render() {
+                return (
+                    <Context.Consumer>
+                    { (store) => (
+                        <Todos store={store}/>
+                    )}
+                    </Context.Consumer>
+                )
+            }
+        }
+
+        class ConnectedGoals extends React.Component {
+            render() {
+                return (
+                    <Context.Consumer>
+                    { (store) => (
+                        <Goals store={store}/>
+                    )}
+                    </Context.Consumer>
                 )
             }
         }
