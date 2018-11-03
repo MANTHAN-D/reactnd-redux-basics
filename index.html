@@ -81,7 +81,7 @@
                                 ? todo
                                 : Object.assign({}, todo, { complete: !todo.complete })
                     )
-                case RECIEVE_DATA: action
+                case RECIEVE_DATA:
                     return action.todos
                 default:
                     return state
